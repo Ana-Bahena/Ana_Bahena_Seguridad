@@ -12,23 +12,36 @@
                 <span class="auth-subtitle">Ingresa tus credenciales para continuar</span>
             </div>
         </ng-template>
+        <!--admin@admin.com
+        Admin123!-->
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+            <div class="field">
+                <p-floatlabel variant="on">
+                    <input id="login-email" type="email" pInputText formControlName="email" class="auth-input" />
+                    <label for="login-email">
+                        <i class="pi pi-envelope" style="margin-right: 6px;"></i>Correo electrónico
+                    </label>
+                </p-floatlabel>
+                <small class="error-text"
+                    *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
+                    <span *ngIf="loginForm.get('email')?.errors?.['required']">* El correo es obligatorio.</span>
+                    <span *ngIf="loginForm.get('email')?.errors?.['email']">* Formato de correo inválido.</span>
+                </small>
+            </div>
 
-        <form (ngSubmit)="onLogin()" class="auth-form">
-
-            <p-floatlabel variant="on">
-                <input id="login-email" type="email" pInputText [(ngModel)]="email" name="email" class="auth-input" />
-                <label for="login-email">
-                    <i class="pi pi-envelope" style="margin-right: 6px;"></i>Correo electrónico
-                </label>
-            </p-floatlabel>
-
-            <p-floatlabel variant="on">
-                <p-password id="login-password" [(ngModel)]="password" name="password" [feedback]="false"
-                    [toggleMask]="true" styleClass="auth-input" inputStyleClass="auth-input" />
-                <label for="login-password">
-                    <i class="pi pi-key" style="margin-right: 6px;"></i>Contraseña
-                </label>
-            </p-floatlabel>
+            <div class="field">
+                <p-floatlabel variant="on">
+                    <p-password id="login-password" formControlName="password" [feedback]="false" [toggleMask]="true"
+                        styleClass="auth-input" inputStyleClass="auth-input" />
+                    <label for="login-password">
+                        <i class="pi pi-key" style="margin-right: 6px;"></i>Contraseña
+                    </label>
+                </p-floatlabel>
+                <small class="error-text"
+                    *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+                    * La contraseña es obligatoria.
+                </small>
+            </div>
 
             <p-button type="submit" label="Iniciar Sesión" icon="pi pi-sign-in" iconPos="right" styleClass="auth-btn"
                 [loading]="loading()" />

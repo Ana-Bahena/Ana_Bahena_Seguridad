@@ -1,7 +1,6 @@
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
 
-/* Reset y Base */
 * {
     box-sizing: border-box;
 }
@@ -117,4 +116,11 @@ body {
     font-weight: 600;
     color: #9ca3af;
     text-transform: uppercase;
+}
+
+.error-text {
+    color: #ef4444;
+    font-size: 0.75rem;
+    display: block;
+    margin-top: 0.25rem;
 }

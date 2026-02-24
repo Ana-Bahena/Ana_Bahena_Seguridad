@@ -1,7 +1,7 @@
 <p-toast />
 
 <div class="auth-wrapper">
-    <p-card styleClass="auth-card">
+    <p-card styleClass="auth-card" [style]="{'max-width': '500px'}">
 
         <ng-template pTemplate="header">
             <div class="auth-header">
@@ -13,19 +13,54 @@
             </div>
         </ng-template>
 
-        <form (ngSubmit)="onRegister()" class="auth-form">
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
 
+            <!-- Usuario -->
             <p-floatlabel variant="on">
-                <input id="reg-name" type="text" pInputText [(ngModel)]="name" name="name" class="auth-input" />
+                <input id="reg-username" type="text" pInputText formControlName="username" class="auth-input" />
+                <label for="reg-username">
+                    <i class="pi pi-id-card" style="margin-right: 6px;"></i>Usuario
+                </label>
+            </p-floatlabel>
+
+            <!-- Nombre Completo -->
+            <p-floatlabel variant="on">
+                <input id="reg-name" type="text" pInputText formControlName="fullName" class="auth-input" />
                 <label for="reg-name">
                     <i class="pi pi-user" style="margin-right: 6px;"></i>Nombre completo
                 </label>
             </p-floatlabel>
 
+            <!-- Correo -->
             <p-floatlabel variant="on">
-                <input id="reg-email" type="email" pInputText [(ngModel)]="email" name="email" class="auth-input" />
+                <input id="reg-email" type="email" pInputText formControlName="email" class="auth-input" />
                 <label for="reg-email">
                     <i class="pi pi-envelope" style="margin-right: 6px;"></i>Correo electrónico
+                </label>
+            </p-floatlabel>
+
+            <!-- Teléfono -->
+            <p-floatlabel variant="on">
+                <input id="reg-phone" type="text" pInputText formControlName="phone" class="auth-input" />
+                <label for="reg-phone">
+                    <i class="pi pi-phone" style="margin-right: 6px;"></i>Teléfono (solo números)
+                </label>
+            </p-floatlabel>
+
+            <!-- Dirección -->
+            <p-floatlabel variant="on">
+                <input id="reg-address" type="text" pInputText formControlName="address" class="auth-input" />
+                <label for="reg-address">
+                    <i class="pi pi-map-marker" style="margin-right: 6px;"></i>Dirección
+                </label>
+            </p-floatlabel>
+
+            <!-- Fecha de Nacimiento -->
+            <p-floatlabel variant="on">
+                <p-datepicker id="reg-birthdate" formControlName="birthDate" [showIcon]="true" appendTo="body"
+                    styleClass="auth-input" inputStyleClass="auth-input" dateFormat="dd/mm/yy" />
+                <label for="reg-birthdate">
+                    <i class="pi pi-calendar" style="margin-right: 6px;"></i>Fecha de Nacimiento (18+)
                 </label>
             </p-floatlabel>
 
@@ -33,25 +68,49 @@
                 <span class="divider-label">SEGURIDAD</span>
             </p-divider>
 
+            <!-- Contraseña -->
             <p-floatlabel variant="on">
-                <p-password id="reg-password" [(ngModel)]="password" name="password" [toggleMask]="true"
-                    styleClass="auth-input" inputStyleClass="auth-input" promptLabel="Ingresa tu contraseña"
-                    weakLabel="Débil" mediumLabel="Media" strongLabel="Fuerte" />
+                <p-password id="reg-password" formControlName="password" [toggleMask]="true" styleClass="auth-input"
+                    inputStyleClass="auth-input" promptLabel="Mínimo 10 caracteres y un símbolo" weakLabel="Débil"
+                    mediumLabel="Media" strongLabel="Fuerte" />
                 <label for="reg-password">
                     <i class="pi pi-key" style="margin-right: 6px;"></i>Contraseña
                 </label>
             </p-floatlabel>
 
+            <!-- Confirmar Contraseña -->
             <p-floatlabel variant="on">
-                <p-password id="reg-confirm" [(ngModel)]="confirmPassword" name="confirmPassword" [feedback]="false"
-                    [toggleMask]="true" styleClass="auth-input" inputStyleClass="auth-input" />
+                <p-password id="reg-confirm" formControlName="confirmPassword" [feedback]="false" [toggleMask]="true"
+                    styleClass="auth-input" inputStyleClass="auth-input" />
                 <label for="reg-confirm">
                     <i class="pi pi-lock" style="margin-right: 6px;"></i>Confirmar contraseña
                 </label>
             </p-floatlabel>
 
+            <!-- Mensajes de Validación -->
+            <div class="validation-errors" *ngIf="registerForm.dirty || registerForm.touched">
+                <small class="error-text" *ngIf="registerForm.get('password')?.errors?.['minlength']">
+                    * La contraseña debe tener al menos 10 caracteres.
+                </small>
+                <small class="error-text" *ngIf="registerForm.get('password')?.errors?.['noSymbol']">
+                    * La contraseña debe incluir al menos un símbolo especial (!@#$%^&* etc.).
+                </small>
+                <small class="error-text" *ngIf="registerForm.get('birthDate')?.errors?.['underAge']">
+                    * Debes ser mayor de edad para registrarte (18+).
+                </small>
+                <small class="error-text" *ngIf="registerForm.get('phone')?.errors?.['pattern']">
+                    * El teléfono solo debe contener números.
+                </small>
+                <small class="error-text" *ngIf="registerForm.get('confirmPassword')?.hasError('mismatch')">
+                    * Las contraseñas no coinciden.
+                </small>
+                <small class="error-text" *ngIf="registerForm.invalid && registerForm.touched">
+                    * Por favor completa todos los campos correctamente.
+                </small>
+            </div>
+
             <p-button type="submit" label="Crear cuenta" icon="pi pi-check" iconPos="right" styleClass="auth-btn"
-                [loading]="loading()" />
+                [loading]="loading()" [disabled]="registerForm.invalid" />
 
         </form>
 

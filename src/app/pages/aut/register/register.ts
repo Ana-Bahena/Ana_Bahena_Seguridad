@@ -1,74 +1,124 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import {
+    FormBuilder,
+    FormGroup,
+    Validators,
+    ReactiveFormsModule,
+    AbstractControl,
+    ValidationErrors,
+} from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { CardModule } from 'primeng/card';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DividerModule } from 'primeng/divider';
-import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-register',
     standalone: true,
     imports: [
         RouterLink,
-        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
         ButtonModule,
         InputTextModule,
         PasswordModule,
         CardModule,
         FloatLabelModule,
         DividerModule,
-        SelectModule,
+        DatePickerModule,
         ToastModule,
     ],
     providers: [MessageService],
     templateUrl: './register.html',
 })
 export class RegisterPage {
-    name = '';
-    email = '';
-    password = '';
-    confirmPassword = '';
-    role: string | null = null;
+    registerForm: FormGroup;
     loading = signal(false);
 
-    roles = [
-        { label: 'Estudiante', value: 'student' },
-        { label: 'Docente', value: 'teacher' },
-        { label: 'Administrador', value: 'admin' },
-    ];
-
     constructor(
+        private fb: FormBuilder,
         private router: Router,
         private messageService: MessageService
-    ) { }
+    ) {
+        this.registerForm = this.fb.group(
+            {
+                username: ['', [Validators.required]],
+                fullName: ['', [Validators.required]],
+                email: ['', [Validators.required, Validators.email]],
+                password: [
+                    '',
+                    [
+                        Validators.required,
+                        Validators.minLength(10),
+                        this.passwordSymbolValidator,
+                    ],
+                ],
+                confirmPassword: ['', [Validators.required]],
+                address: ['', [Validators.required]],
+                phone: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+                birthDate: ['', [Validators.required, this.ageValidator]],
+            },
+            { validators: this.matchPasswordValidator }
+        );
+    }
+
+    // Validador de símbolos especiales para contraseña
+    passwordSymbolValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+        return !hasSymbol ? { noSymbol: true } : null;
+    }
+
+    // Validador de mayoría de edad (18+)
+    ageValidator(control: AbstractControl): ValidationErrors | null {
+        if (!control.value) return null;
+        const birthDate = new Date(control.value);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age < 18 ? { underAge: true } : null;
+    }
+
+    // Validador de coincidencia de contraseñas
+    matchPasswordValidator(control: AbstractControl): ValidationErrors | null {
+        const password = control.get('password');
+        const confirmPassword = control.get('confirmPassword');
+        if (password && confirmPassword && password.value !== confirmPassword.value) {
+            confirmPassword.setErrors({ mismatch: true });
+            return { mismatch: true };
+        }
+        return null;
+    }
 
     onRegister() {
-        if (!this.name || !this.email || !this.password || !this.confirmPassword) {
+        if (this.registerForm.invalid) {
             this.messageService.add({
                 severity: 'warn',
-                summary: 'Campos requeridos',
-                detail: 'Por favor completa todos los campos.',
+                summary: 'Formulario Inválido',
+                detail: 'Por favor complete correctamente todos los campos.',
             });
             return;
         }
-        if (this.password !== this.confirmPassword) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Las contraseñas no coinciden.',
-            });
-            return;
-        }
+
         this.loading.set(true);
         setTimeout(() => {
             this.loading.set(false);
-            this.router.navigate(['/login']);
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Registro Exitoso',
+                detail: 'Cuenta creada correctamente.',
+            });
+            setTimeout(() => this.router.navigate(['/login']), 1500);
         }, 1500);
     }
 }
