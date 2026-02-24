@@ -1,0 +1,47 @@
+<p-toast />
+
+<div class="auth-wrapper">
+    <p-card styleClass="auth-card">
+
+        <ng-template pTemplate="header">
+            <div class="auth-header">
+                <div class="auth-icon-circle">
+                    <i class="pi pi-lock"></i>
+                </div>
+                <h2 class="auth-title">Iniciar Sesión</h2>
+                <span class="auth-subtitle">Ingresa tus credenciales para continuar</span>
+            </div>
+        </ng-template>
+
+        <form (ngSubmit)="onLogin()" class="auth-form">
+
+            <p-floatlabel variant="on">
+                <input id="login-email" type="email" pInputText [(ngModel)]="email" name="email" class="auth-input" />
+                <label for="login-email">
+                    <i class="pi pi-envelope" style="margin-right: 6px;"></i>Correo electrónico
+                </label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on">
+                <p-password id="login-password" [(ngModel)]="password" name="password" [feedback]="false"
+                    [toggleMask]="true" styleClass="auth-input" inputStyleClass="auth-input" />
+                <label for="login-password">
+                    <i class="pi pi-key" style="margin-right: 6px;"></i>Contraseña
+                </label>
+            </p-floatlabel>
+
+            <p-button type="submit" label="Iniciar Sesión" icon="pi pi-sign-in" iconPos="right" styleClass="auth-btn"
+                [loading]="loading()" />
+
+        </form>
+
+        <ng-template pTemplate="footer">
+            <p-divider />
+            <p class="auth-footer-text">
+                ¿No tienes cuenta?
+                <a routerLink="/auth/register" class="auth-link">Regístrate aquí</a>
+            </p>
+        </ng-template>
+
+    </p-card>
+</div>

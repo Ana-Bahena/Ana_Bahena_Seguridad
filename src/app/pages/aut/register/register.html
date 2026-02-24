@@ -1,0 +1,67 @@
+<p-toast />
+
+<div class="auth-wrapper">
+    <p-card styleClass="auth-card">
+
+        <ng-template pTemplate="header">
+            <div class="auth-header">
+                <div class="auth-icon-circle">
+                    <i class="pi pi-user-plus"></i>
+                </div>
+                <h2 class="auth-title">Crear Cuenta</h2>
+                <span class="auth-subtitle">Completa el formulario para registrarte</span>
+            </div>
+        </ng-template>
+
+        <form (ngSubmit)="onRegister()" class="auth-form">
+
+            <p-floatlabel variant="on">
+                <input id="reg-name" type="text" pInputText [(ngModel)]="name" name="name" class="auth-input" />
+                <label for="reg-name">
+                    <i class="pi pi-user" style="margin-right: 6px;"></i>Nombre completo
+                </label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on">
+                <input id="reg-email" type="email" pInputText [(ngModel)]="email" name="email" class="auth-input" />
+                <label for="reg-email">
+                    <i class="pi pi-envelope" style="margin-right: 6px;"></i>Correo electrónico
+                </label>
+            </p-floatlabel>
+
+            <p-divider align="center">
+                <span class="divider-label">SEGURIDAD</span>
+            </p-divider>
+
+            <p-floatlabel variant="on">
+                <p-password id="reg-password" [(ngModel)]="password" name="password" [toggleMask]="true"
+                    styleClass="auth-input" inputStyleClass="auth-input" promptLabel="Ingresa tu contraseña"
+                    weakLabel="Débil" mediumLabel="Media" strongLabel="Fuerte" />
+                <label for="reg-password">
+                    <i class="pi pi-key" style="margin-right: 6px;"></i>Contraseña
+                </label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on">
+                <p-password id="reg-confirm" [(ngModel)]="confirmPassword" name="confirmPassword" [feedback]="false"
+                    [toggleMask]="true" styleClass="auth-input" inputStyleClass="auth-input" />
+                <label for="reg-confirm">
+                    <i class="pi pi-lock" style="margin-right: 6px;"></i>Confirmar contraseña
+                </label>
+            </p-floatlabel>
+
+            <p-button type="submit" label="Crear cuenta" icon="pi pi-check" iconPos="right" styleClass="auth-btn"
+                [loading]="loading()" />
+
+        </form>
+
+        <ng-template pTemplate="footer">
+            <p-divider />
+            <p class="auth-footer-text">
+                ¿Ya tienes cuenta?
+                <a routerLink="/" class="auth-link">Inicia sesión</a>
+            </p>
+        </ng-template>
+
+    </p-card>
+</div>
