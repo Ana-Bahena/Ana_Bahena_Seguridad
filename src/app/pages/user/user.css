@@ -1,0 +1,65 @@
+.section-header {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--p-text-color);
+}
+
+/* Cabecera del perfil */
+.profile-hero {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.5rem 0 1rem;
+}
+
+.profile-hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.profile-full-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--p-text-color);
+}
+
+.profile-username {
+    font-size: 0.95rem;
+    color: var(--p-text-muted-color);
+}
+
+/* Grid de datos */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    padding: 0.5rem 0;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.field-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--p-text-muted-color);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.field-value {
+    font-size: 1rem;
+    color: var(--p-text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

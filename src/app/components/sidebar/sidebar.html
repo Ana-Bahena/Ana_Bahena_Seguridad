@@ -1,0 +1,22 @@
+<div class="sidebar-container">
+
+    <!-- Logo / Título -->
+    <div class="sidebar-header">
+        <i class="pi pi-shield" style="font-size: 1.8rem; color: var(--p-primary-color);"></i>
+        <span class="sidebar-title">Mi App</span>
+    </div>
+
+    <p-divider />
+
+    <!-- Menú de navegación -->
+    <p-panelMenu [model]="items" styleClass="sidebar-menu" />
+
+    <p-divider />
+
+    <!-- Versión al pie -->
+    <div class="sidebar-footer">
+        <small class="sidebar-version-label">Versión</small>
+        <p-tag [value]="'v' + appVersion" severity="secondary" />
+    </div>
+
+</div>

@@ -1,3 +1,5 @@
+
+
 <p-toast />
 
 <div class="auth-wrapper">
@@ -17,7 +19,7 @@
 
             <!-- Usuario -->
             <p-floatlabel variant="on">
-                <input id="reg-username" type="text" pInputText formControlName="username" class="auth-input" />
+                <input id="reg-username" type="text" pInputText formControlName="username" class="auth-input" appTrimOnBlur />
                 <label for="reg-username">
                     <i class="pi pi-id-card" style="margin-right: 6px;"></i>Usuario
                 </label>
@@ -25,7 +27,7 @@
 
             <!-- Nombre Completo -->
             <p-floatlabel variant="on">
-                <input id="reg-name" type="text" pInputText formControlName="fullName" class="auth-input" />
+                <input id="reg-name" type="text" pInputText formControlName="fullName" class="auth-input" appTrimOnBlur/>
                 <label for="reg-name">
                     <i class="pi pi-user" style="margin-right: 6px;"></i>Nombre completo
                 </label>
@@ -33,7 +35,7 @@
 
             <!-- Correo -->
             <p-floatlabel variant="on">
-                <input id="reg-email" type="email" pInputText formControlName="email" class="auth-input" />
+                <input id="reg-email" type="email" pInputText formControlName="email" class="auth-input" appTrimOnBlur/>
                 <label for="reg-email">
                     <i class="pi pi-envelope" style="margin-right: 6px;"></i>Correo electrónico
                 </label>
@@ -41,7 +43,7 @@
 
             <!-- Teléfono -->
             <p-floatlabel variant="on">
-                <input id="reg-phone" type="text" pInputText formControlName="phone" class="auth-input" />
+                <input id="reg-phone" type="text" pInputText formControlName="phone" class="auth-input" maxlength="10"/>
                 <label for="reg-phone">
                     <i class="pi pi-phone" style="margin-right: 6px;"></i>Teléfono (solo números)
                 </label>
@@ -49,7 +51,7 @@
 
             <!-- Dirección -->
             <p-floatlabel variant="on">
-                <input id="reg-address" type="text" pInputText formControlName="address" class="auth-input" />
+                <input id="reg-address" type="text" pInputText formControlName="address" class="auth-input" appTrimOnBlur/>
                 <label for="reg-address">
                     <i class="pi pi-map-marker" style="margin-right: 6px;"></i>Dirección
                 </label>

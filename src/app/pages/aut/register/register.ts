@@ -18,6 +18,24 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../../services/user.service';
+
+import { Directive, ElementRef, HostListener } from '@angular/core';
+@Directive({
+    selector: '[appTrimOnBlur]',
+    standalone: true   // si usas standalone components
+})
+export class TrimOnBlurDirective {
+    constructor(private el: ElementRef) { }
+
+    @HostListener('blur') onBlur() {
+        const input = this.el.nativeElement as HTMLInputElement;
+        if (input.value) {
+            input.value = input.value.trim();
+            input.dispatchEvent(new Event('input'));
+        }
+    }
+}
 
 @Component({
     selector: 'app-register',
@@ -34,6 +52,7 @@ import { CommonModule } from '@angular/common';
         DividerModule,
         DatePickerModule,
         ToastModule,
+        TrimOnBlurDirective,
     ],
     providers: [MessageService],
     templateUrl: './register.html',
@@ -45,7 +64,8 @@ export class RegisterPage {
     constructor(
         private fb: FormBuilder,
         private router: Router,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private userService: UserService
     ) {
         this.registerForm = this.fb.group(
             {
@@ -112,13 +132,17 @@ export class RegisterPage {
 
         this.loading.set(true);
         setTimeout(() => {
+            // Guardar perfil en el servicio (localStorage)
+            const { username, fullName, email, phone, address, birthDate, password } = this.registerForm.value;
+            this.userService.saveProfile({ username, fullName, email, phone, address, birthDate, password });
+
             this.loading.set(false);
             this.messageService.add({
                 severity: 'success',
                 summary: 'Registro Exitoso',
                 detail: 'Cuenta creada correctamente.',
             });
-            setTimeout(() => this.router.navigate(['/login']), 1500);
+            setTimeout(() => this.router.navigate(['/']), 1500);
         }, 1500);
     }
 }

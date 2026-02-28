@@ -10,6 +10,7 @@ import { DividerModule } from 'primeng/divider';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../../services/user.service';
 
 @Component({
     selector: 'app-login',
@@ -33,10 +34,15 @@ export class LoginPage {
     loginForm: FormGroup;
     loading = signal(false);
 
+    // Credenciales del administrador por defecto
+    private readonly adminEmail = 'admin@admin.com';
+    private readonly adminPassword = 'Admin123!';
+
     constructor(
         private fb: FormBuilder,
         private router: Router,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private userService: UserService
     ) {
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
@@ -50,18 +56,26 @@ export class LoginPage {
             return;
         }
 
-        const hardcodedEmail = 'admin@admin.com';
-        const hardcodedPassword = 'Admin123!';
         const { email, password } = this.loginForm.value;
-
         this.loading.set(true);
 
         setTimeout(() => {
-            if (email === hardcodedEmail && password === hardcodedPassword) {
+            const isAdmin =
+                email === this.adminEmail && password === this.adminPassword;
+
+            // Verificar también contra el usuario registrado
+            const registeredUser = this.userService.getProfile();
+            const isRegisteredUser =
+                registeredUser !== null &&
+                email === registeredUser.email &&
+                password === registeredUser.password;
+
+            if (isAdmin || isRegisteredUser) {
+                const name = isAdmin ? 'Administrador' : registeredUser!.fullName;
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Éxito',
-                    detail: 'Bienvenido de nuevo.',
+                    summary: 'Bienvenido',
+                    detail: `Hola, ${name}!`,
                 });
                 setTimeout(() => {
                     this.loading.set(false);
