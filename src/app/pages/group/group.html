@@ -1,16 +1,102 @@
-<!-- Etiqueta "N elemento visual" mostrando la variable N -->
-<p-tag value="N elemento visual" severity="info" styleClass="mb-3" />
+<p-toast />
+<p-confirmDialog />
 
+<h2 class="section-header">Administración de Grupos</h2>
 
 <p-divider />
 
-<!-- Card vacía con título Total y subtítulo H2 Advance -->
-<p-card>
-    <ng-template #title>
-        <span class="card-title">Total</span>
-    </ng-template>
-    <ng-template #subtitle>
-        <span class="card-subtitle">Advance</span>
-    </ng-template>
-    <!-- Contenido vacío -->
+<p-card styleClass="group-card">
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <p-button severity="success" label="Nuevo Grupo" icon="pi pi-plus" (onClick)="openNew()" />
+        </ng-template>
+        <ng-template pTemplate="right">
+            <p-tag [value]="'Total de Grupos: ' + N_get()" severity="info" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="groups" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['name','category','level','author']" [tableStyle]="{'min-width': '60rem'}"
+        [rowHover]="true" dataKey="id">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+                <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
+                <th pSortableColumn="category">Categoría <p-sortIcon field="category" /></th>
+                <th pSortableColumn="level">Nivel <p-sortIcon field="level" /></th>
+                <th pSortableColumn="author">Autor <p-sortIcon field="author" /></th>
+                <th pSortableColumn="members">Miembros <p-sortIcon field="members" /></th>
+                <th pSortableColumn="tickets">Tickets <p-sortIcon field="tickets" /></th>
+                <th>Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-group>
+            <tr>
+                <td>{{group.id}}</td>
+                <td>{{group.name}}</td>
+                <td>{{group.category}}</td>
+                <td>{{group.level}}</td>
+                <td>{{group.author}}</td>
+                <td>{{group.members}}</td>
+                <td>{{group.tickets}}</td>
+                <td>
+                    <p-button icon="pi pi-pencil" class="mr-2" rounded="true" text="true" severity="info"
+                        (onClick)="editGroup(group)" />
+                    <p-button icon="pi pi-trash" severity="danger" rounded="true" text="true"
+                        (onClick)="deleteGroup(group)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8">No hay grupos registrados.</td>
+            </tr>
+        </ng-template>
+    </p-table>
 </p-card>
+
+<!-- Diálogo de Creación / Edición -->
+<p-dialog [(visible)]="groupDialog" [style]="{width: '450px'}" header="Detalles del Grupo" [modal]="true"
+    styleClass="p-fluid">
+    <ng-template pTemplate="content">
+
+        <div class="field mb-4">
+            <label for="name">Nombre</label>
+            <input type="text" pInputText id="name" [(ngModel)]="groupItem.name" required autofocus />
+            <small class="p-error" *ngIf="submitted && !groupItem.name">El Nombre es requerido.</small>
+        </div>
+
+        <div class="field mb-4">
+            <label for="category">Categoría</label>
+            <p-select id="category" [options]="categoryOptions" [(ngModel)]="groupItem.category" optionLabel="label"
+                optionValue="value" placeholder="Selecciona una Categoría" appendTo="body"></p-select>
+        </div>
+
+        <div class="field mb-4">
+            <label for="level">Nivel</label>
+            <p-select id="level" [options]="levelOptions" [(ngModel)]="groupItem.level" optionLabel="label"
+                optionValue="value" placeholder="Selecciona un Nivel" appendTo="body"></p-select>
+        </div>
+
+        <div class="field mb-4">
+            <label for="author">Autor</label>
+            <input type="text" pInputText id="author" [(ngModel)]="groupItem.author" />
+        </div>
+
+        <div class="formgrid grid">
+            <div class="field col mb-4">
+                <label for="members">Miembros</label>
+                <p-inputNumber id="members" [(ngModel)]="groupItem.members"></p-inputNumber>
+            </div>
+            <div class="field col mb-4">
+                <label for="tickets">Tickets</label>
+                <p-inputNumber id="tickets" [(ngModel)]="groupItem.tickets"></p-inputNumber>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" icon="pi pi-times" text="true" (onClick)="hideDialog()" />
+        <p-button label="Guardar" icon="pi pi-check" (onClick)="saveGroup()" />
+    </ng-template>
+</p-dialog>

@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
 import { MenuItem } from 'primeng/api';
+
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,19 +14,35 @@ import { MenuItem } from 'primeng/api';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   appVersion = '1.0.0';
+  items: MenuItem[] = [];
 
-  items: MenuItem[] = [
-    {
-      label: 'Group',
-      icon: 'pi pi-users',
-      routerLink: ['/home/group'],
-    },
-    {
-      label: 'User',
-      icon: 'pi pi-user',
-      routerLink: ['/home/user'],
-    },
-  ];
+  constructor(private router: Router, private userService: UserService) { }
+
+  ngOnInit() {
+    this.items = [
+      {
+        label: 'Group',
+        icon: 'pi pi-users',
+        routerLink: ['/home/group'],
+      },
+      {
+        label: 'User',
+        icon: 'pi pi-user',
+        routerLink: ['/home/user'],
+      },
+      {
+        separator: true
+      },
+      {
+        label: 'Cerrar sesión',
+        icon: 'pi pi-sign-out',
+        command: () => {
+          this.userService.clearProfile();
+          this.router.navigate(['/']);
+        }
+      }
+    ];
+  }
 }
